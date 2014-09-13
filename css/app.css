@@ -1,0 +1,33 @@
+#queen
+{
+    display: flex;
+    align-content: flex-end;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-flow: row wrap;
+}
+
+.board {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column wrap;
+    align-content: stretch;
+    margin-right: 10px;
+    margin-bottom: 10px;
+
+}
+
+
+TD {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+    text-align: center;
+
+}
+
+.red { background-color: darkred;}
+.green { background-color: green;}

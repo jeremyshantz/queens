@@ -1,0 +1,8 @@
+<div class="board">
+    <div><span ng-bind="board.win"></span><span> </span><span ng-bind="board.matches"></span><span> / </span><span ng-bind="board.board.length"></span></div>
+    <table border="1">
+        <tr ng-repeat="row in board.board track by $index">
+            <td ng-class="{green: column, red: !column}" ng-repeat="column in row track by $index">{{column}}</td>
+        </tr>
+    </table>
+</div>
