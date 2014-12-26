@@ -19,7 +19,7 @@ app.directive('queens', function ($timeout) {
             var add = function() {
 
                 $timeout(function(){
-                    //  $scope.queen.tryNext();
+                    $scope.queen.tryNext();
                     $scope.count++;
                     if ($scope.count < 20) {
                         add();
