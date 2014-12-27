@@ -10,24 +10,10 @@ app.directive('queens', function ($timeout) {
         scope: {},
         controller: function ($scope) {
 
-            $scope.n = 6;
+            $scope.n = 5;
             $scope.count = 1;
             $scope.queen = new Queen($scope.n);
-            $scope.queen.tryNext();
-
-
-            var add = function() {
-
-                $timeout(function(){
-                    $scope.queen.tryNext();
-                    $scope.count++;
-                    if ($scope.count < 20) {
-                        add();
-                    }
-                }, 50, true);
-            };
-
-            add();
+            $scope.queen.solve(0);
         },
         templateUrl: 'partials/queens.html'
     };

@@ -3,162 +3,66 @@
 var Queen = function(n) {
 
     this.n = n;
-    this.value_invalid = '';
     this.value_valid = 'Queen';
     this.boards = [];
+    this.currentSolution = [this.n];
 
-    this.startX = 0;
+    this.addCurrent = function () {
 
-    this.except = [];
-    for(var i = 0; i < n; i++) {
-        this.except[i] = [];
-    }
-};
+        var board = this.buildBlankBoard(this.n),
+            i;
 
-Queen.prototype.tryNext = function () {
+        for(i = 0; i < this.n; i++) {
 
-    var i = 0;
-
-    for(i = 0; i < 2; i++) {
-
-        var n = this.n;
-        var board = this.buildBlankBoard(n);
-
-        var x, y,
-            startX = this.startX,
-            matches = 0,
-            self = this;
-
-        for (x = startX; x < n; x += 1) {
-
-            y = this.findValidY(board[x], self.except[x]);
-            if (y === -1) {
-
-            }
-            else {
-                self.except[x].push(y);
-                var cell = board[x][y];
-                matches++;
-                this.cellSelected(board, x, y);
-            }
+            board[i][this.currentSolution[i]] = this.value_valid;
         }
 
-        var b = {
-            win: matches === board.length,
+        var matches = this.currentSolution.filter(function(i) { return !isNaN(i) || i; }).length;
+
+        this.boards.push({
+
+            win: matches == this.n,
             matches: matches,
             board: board
-        };
+        });
+    };
 
-        this.boards.push(b);
+    this.validLocation = function(current, row) {
 
-    }
-    return b;
-};
+        var i;
 
-Queen.prototype.findValidY = function(row, except) {
+        for (i = 0; i < current; i++) {
 
-    var i;
-    for(i = 0; i < this.n; i++) {
+            var prevQueen = this.currentSolution[i];
 
-        if (except.some(function (j) { return j === i; })) {
-            continue;
+            if (prevQueen == row ||  prevQueen == row - (current - i) ||  prevQueen == row + (current - i)) {
+                return false;
+            }
         }
 
-        if (row[i] === this.value_valid){
-            return i;
+        return true;
+    };
+};
+
+Queen.prototype.solve = function (x) {
+    var y;
+
+    if (x === this.n)
+    {
+        this.addCurrent();
+    }
+    else
+    {
+        for (y = 0; y < this.n; y++)
+        {
+            if (this.validLocation(x, y))
+            {
+                this.currentSolution[x] = y;
+                this.solve(x + 1);
+            }
         }
     }
-
-    return -1;
-};
-
-Queen.prototype.cellSelected = function(board, x, y) {
-
-    this.invalidateRow(board[x], y);
-    this.invalidateColumn(board, y, x);
-    this.invalidateDiagonalRightDown(board, x, y);
-    this.invalidateDiagonalRightUp(board, x, y);
-    this.invalidateDiagonalLeftDown(board, x, y);
-    this.invalidateDiagonalLeftUp(board, x, y);
-
-};
-
-Queen.prototype.invalidateRow = function(row, y) {
-    var x;
-    for(x = 0; x < row.length; x+=1) {
-        if (x !== y) {
-            row[x] = this.value_invalid;
-        }
-    }
-};
-
-Queen.prototype.invalidateColumn = function(board, y, x){
-    var i;
-    for(i = 0; i < board.length; i+=1) {
-
-        if (i > x) {
-            board[i][y] = this.value_invalid;
-        }
-    }
-};
-
-Queen.prototype.invalidateDiagonalRightDown = function(board, x, y){
-
-    x += 1;
-    y += 1;
-
-    if (x >= this.n || y >= this.n) {
-        return;
-    }
-
-    board[x][y] = this.value_invalid;
-
-    this.invalidateDiagonalRightDown(board, x, y);
-};
-
-Queen.prototype.invalidateDiagonalRightUp = function(board, x, y){
-
-    x -= 1;
-    y += 1;
-
-    if (x < 0 || y >= this.n) {
-        return;
-    }
-
-    board[x][y] = this.value_invalid;
-
-    this.invalidateDiagonalRightDown(board, x, y);
-};
-
-Queen.prototype.invalidateDiagonalLeftDown = function(board, x, y){
-
-    x += 1;
-    y -= 1;
-
-    if (x >= this.n || y < 0) {
-        return;
-    }
-
-    board[x][y] = this.value_invalid;
-
-    this.invalidateDiagonalLeftDown(board, x, y);
-};
-
-
-Queen.prototype.invalidateDiagonalLeftUp = function(board, x, y){
-
-    x -= 1;
-    y -= 1;
-
-    if (x < 0 || y < 0) {
-        return;
-    }
-
-    board[x][y] = this.value_invalid;
-
-    this.invalidateDiagonalLeftUp(board, x, y);
-};
-
+}
 
 Queen.prototype.buildBlankBoard = function(n) {
     var board = [],
@@ -167,7 +71,7 @@ Queen.prototype.buildBlankBoard = function(n) {
     for(x = 0; x < n; x+=1) {
         var a =[];
         for(y = 0; y < n; y+=1) {
-            a.push(this.value_valid);
+            a.push('');
         }
         board.push(a);
     }

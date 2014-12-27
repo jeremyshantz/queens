@@ -20,6 +20,9 @@
 
 }
 
+TABLE.win {;
+    border: lawngreen 6px  solid ;
+}
 
 TD {
     width: 40px;
